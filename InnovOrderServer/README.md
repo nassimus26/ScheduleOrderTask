@@ -5,6 +5,10 @@
 * Run ```npm install```.
 * Edit the `config/ScheduleConfig.js` file to suit your needs.
 
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
 # Running the server
 
 * ```npm start```.
