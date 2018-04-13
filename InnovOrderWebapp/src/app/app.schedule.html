@@ -37,7 +37,9 @@
         <td>{{result.end}}</td>
         <td>{{result.startTime | date : 'dd/MM/yyyy HH:mm'}}</td>
         <td>{{result.endTime | date : 'dd/MM/yyyy HH:mm'}}</td>
-        <button type="button" class="btn btn-danger" (click)="removeSchedule(result.scheduleId)" >Remove</button>
+        <td>
+          <button type="button" class="btn btn-danger" (click)="removeSchedule(result.scheduleId)" >Remove</button>
+        </td>
       </tr>
     </tbody>
   </table>
