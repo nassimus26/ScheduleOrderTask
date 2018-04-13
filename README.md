@@ -1,5 +1,5 @@
 # ScheduleOrderTask
-![Webapp screen shoot](https://ibb.co/kBZM1n)
+![Webapp screen shoot](https://preview.ibb.co/nbSwZ7/schedule_order.jpg)
 # Installing the app
 
 * Clone the repo by using ```git clone```.
