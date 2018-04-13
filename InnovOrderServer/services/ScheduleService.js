@@ -43,17 +43,11 @@ function getNextScheduleDate() {
         for (i in schedules) {
             var schedule = schedules[i];
             var minimalStart = addDelay(schedule.endTime);
-            console.log('\n'+schedule.endTime.toDate());
-            console.log(minimalStart.toDate());
             var minimalEnd = new moment(minimalStart.toDate());
             minimalEnd.add(scheduleConfig.timeStep, 'minute');
-            console.log('minimalEnd '+minimalEnd.toDate());
-
             var possibleSchedule = new Schedule(minimalStart.format('DD/MM/YYYY'), minimalStart.minutes()+minimalStart.hour()*60, minimalEnd.minutes()+minimalEnd.hour()*60);
-            console.log('possibleSchedule.startTime '+possibleSchedule.startTime.toDate());
             var overlaps = findOverlapItems(possibleSchedule);
             if (!overlaps.length){
-                console.log(minimalStart.toDate());
                 return minimalStart.toDate();
             }
         }
