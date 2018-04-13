@@ -23,4 +23,4 @@ Get the next schedule date : GET http://localhost:3000/api/schedules/nextSchedul
 Get the server config : GET http://localhost:3000/api/schedules/config
 ```
 # App Preview
-![Webapp screen shoot](http://oi66.tinypic.com/w0j9jq.jpg)
+![Webapp screen shoot](http://oi67.tinypic.com/mmzr7q.jpg)
