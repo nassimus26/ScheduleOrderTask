@@ -47,7 +47,10 @@ export class AppSchedule {
             this.loadSchedules();
             this.updateNextScheduleDate();
       },
-      exp =>{this.message = exp.error;}
+      exp =>{
+        this.message = exp.error;
+        this.updateNextScheduleDate();//case old schedule date
+      }
     );
   }
   removeSchedule(id:string) {
