@@ -1,5 +1,5 @@
 # ScheduleOrderTask
-![Webapp screen shoot](https://preview.ibb.co/nbSwZ7/schedule_order.jpg)
+
 # Installing the app
 
 * Clone the repo by using ```git clone```.
@@ -22,3 +22,5 @@ Delete Schedule : DELETE http://localhost:3000/api/schedules/:id
 Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate
 Get the server config : GET http://localhost:3000/api/schedules/config
 ```
+
+![Webapp screen shoot](http://oi65.tinypic.com/29e3rrn.jpg)
