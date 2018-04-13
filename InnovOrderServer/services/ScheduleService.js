@@ -46,15 +46,20 @@ function getNextScheduleDate() {
     if (!schedules.length){
         return fixDateByTimeStep(new Date());
     } else {
+        var now = new moment(fixDateByTimeStep(new Date()));
+        var nowStart = now.minutes()+now.hour()*60;
+        var possibleSchedule = new Schedule(now.format('DD/MM/YYYY'), nowStart, nowStart+scheduleConfig.timeStep);
+        var overlaps = findOverlapItems(possibleSchedule);
+        if (!overlaps.length)
+            return now.toDate();
         for (i in schedules) {
             var schedule = schedules[i];
-            var minimalStart = addDelay(schedule.endTime);
-            var minimalEnd = new moment(minimalStart.toDate());
-            minimalEnd.add(scheduleConfig.timeStep, 'minute');
-            var possibleSchedule = new Schedule(minimalStart.format('DD/MM/YYYY'), minimalStart.minutes()+minimalStart.hour()*60, minimalEnd.minutes()+minimalEnd.hour()*60);
+            var minimalStartDate = addDelay(schedule.endTime);
+            var minimalStart = minimalStartDate.minutes()+minimalStartDate.hour()*60;
+            var possibleSchedule = new Schedule(minimalStartDate.format('DD/MM/YYYY'), minimalStart, minimalStart+scheduleConfig.timeStep);
             var overlaps = findOverlapItems(possibleSchedule);
             if (!overlaps.length){
-                return minimalStart.toDate();
+                return minimalStartDate.toDate();
             }
         }
         return fixDateByTimeStep(new Date());
@@ -65,7 +70,7 @@ function fixDateByTimeStep(date){
     var mnt = new moment(date);
     var mintues = mnt.get('minute');
     var mintuesFloor = Math.floor(mintues/scheduleConfig.timeStep)*scheduleConfig.timeStep;
-    if (mintuesFloor<mintues)
+    if (mintuesFloor<mintues || mintues== new moment(new Date()).minutes())
         mintuesFloor +=scheduleConfig.timeStep;
     mnt.minute(mintuesFloor);
     return mnt.toDate();
@@ -97,10 +102,10 @@ function addDelay(date) {
 function findOverlapItems(schedule){
     return schedules.filter( function(item) {
         return  (item.day == schedule.day && (
-                ( schedule.startTime.toDate().getTime() < addDelay(item.endTime).toDate().getTime()
-                    && schedule.endTime.toDate().getTime() > item.startTime.toDate().getTime()) ||
-                ( addDelay(schedule.endTime).toDate().getTime() > item.startTime.toDate().getTime()
-                        && schedule.startTime.toDate().getTime() < item.startTime.toDate().getTime())
+                ( schedule.startTime.isBefore(addDelay(item.endTime))
+                    && schedule.endTime.isAfter(item.startTime)) ||
+                ( addDelay(schedule.endTime).isAfter(item.startTime)
+                        && schedule.startTime.isBefore(item.startTime))
                 )
 
         );
