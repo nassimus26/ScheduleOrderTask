@@ -7,6 +7,7 @@
 
 require('../models/Schedule');
 var scheduleConfig = require('../config/ScheduleCfg');
+var Schedule = require('../models/Schedule');
 var moment = require('moment');
 var schedules = [];
 
@@ -23,17 +24,39 @@ function create(schedule) {
     if (overlapItems.length>0)
         throw new Error('Adding the new schedule failed, overlap detected');
     schedules.push(schedule);
+    schedules.sort(function compare(a, b){
+        var comparison = 0;
+        if (a.startTime.toDate().getTime() > b.startTime.toDate().getTime()) {
+            comparison = 1;
+        } else if (b.startTime.toDate().getTime() > a.startTime.toDate().getTime()) {
+            comparison = -1;
+        }
+        return comparison;
+    });
     return schedules[schedules.length-1];
 }
 
 function getNextScheduleDate() {
     if (!schedules.length){
         return fixDateByTimeStep(new Date());
-    }else {
-        var schedule = schedules[schedules.length-1];
-        var minimalStartSchedule = addDelay(schedule.endTime);
-        if (minimalStartSchedule.toDate().getTime()> new Date().getTime())
-            return minimalStartSchedule.toDate();
+    } else {
+        for (i in schedules) {
+            var schedule = schedules[i];
+            var minimalStart = addDelay(schedule.endTime);
+            console.log('\n'+schedule.endTime.toDate());
+            console.log(minimalStart.toDate());
+            var minimalEnd = new moment(minimalStart.toDate());
+            minimalEnd.add(scheduleConfig.timeStep, 'minute');
+            console.log('minimalEnd '+minimalEnd.toDate());
+
+            var possibleSchedule = new Schedule(minimalStart.format('DD/MM/YYYY'), minimalStart.minutes()+minimalStart.hour()*60, minimalEnd.minutes()+minimalEnd.hour()*60);
+            console.log('possibleSchedule.startTime '+possibleSchedule.startTime.toDate());
+            var overlaps = findOverlapItems(possibleSchedule);
+            if (!overlaps.length){
+                console.log(minimalStart.toDate());
+                return minimalStart.toDate();
+            }
+        }
         return fixDateByTimeStep(new Date());
     }
 }
@@ -73,7 +96,9 @@ function addDelay(date, delayInMinutes) {
 
 function findOverlapItems(schedule){
     return schedules.filter( function(item) {
-        return  (item.day == schedule.day && schedule.startTime.toDate().getTime() < addDelay(item.endTime).toDate().getTime());
+        return  (item.day == schedule.day && schedule.startTime.toDate().getTime() < addDelay(item.endTime).toDate().getTime()
+        && addDelay(schedule.endTime).toDate().getTime()>item.startTime.toDate().getTime()
+        );
     });
 }
 
