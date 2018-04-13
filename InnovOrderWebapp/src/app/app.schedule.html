@@ -1,0 +1,46 @@
+<div style="width: 800px; margin: 0 auto">
+
+  <br>
+  <h2>InnovOrder : Schedule Order Task</h2>
+
+  <br>
+
+  <div *ngIf="scheduleConfig" >
+  <span class="font-weight-bold"> Time Step</span> : {{scheduleConfig.timeStep}} minutes |
+  <span class="font-weight-bold"> Preparation Delay</span> : {{scheduleConfig.preparationDelay}} minutes |
+  <span class="font-weight-bold"> Rush Delay</span> : {{scheduleConfig.rushDelay}} minutes
+  </div>
+  <br>
+<form (ngSubmit)="onSchedule()">
+  <label for="nextSchedule"  class="font-weight-bold">Next schedule:</label>
+  <input id="nextSchedule" [@changeBodyColor]="colorStateNextSchedule" ([ngModel])="nextSchedule" value="{{nextSchedule | date: 'dd/MM/yyyy HH:mm'}}" readonly>
+
+  <label for="orderDurationSelect" style="margin-left: 20px;"  class="font-weight-bold">Order Duration:</label>
+
+  <select id="orderDurationSelect" [(ngModel)]="orderDuration" name="orderDurationSelect" >
+    <option *ngFor="let item of orderDurationItems" [ngValue]="item">{{item}} minutes</option>
+  </select>
+
+  <button type="submit" class="btn btn-primary pull-right" >Schedule</button>
+</form>
+
+  <div class="sb-message" *ngIf="!!message"><span class="title" style="color: #a961ff">MSG : </span><span>{{ message }}</span></div>
+<br>
+<div *ngIf="schedules && schedules.length">
+  <h2>Schedules List</h2>
+  <table class="table table-striped" >
+    <thead><tr><th>Day</th><th>Start (minutes)</th><th>End (minutes)</th><th>Start Time</th><th>End Time</th><th>ACTIONS</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let result of schedules">
+        <td>{{result.day}}</td>
+        <td>{{result.start}}</td>
+        <td>{{result.end}}</td>
+        <td>{{result.startTime | date : 'dd/MM/yyyy HH:mm'}}</td>
+        <td>{{result.endTime | date : 'dd/MM/yyyy HH:mm'}}</td>
+        <button type="button" class="btn btn-danger" (click)="removeSchedule(result.scheduleId)" >Remove</button>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
