@@ -24,7 +24,7 @@
   <button type="submit" class="btn btn-primary pull-right" >Schedule</button>
 </form>
 
-  <div class="sb-message" *ngIf="!!message"><span class="title" style="color: #a961ff">MSG : </span><span>{{ message }}</span></div>
+  <div class="alert-info" *ngIf="!!message"><span class="title" style="color: #a961ff">MSG : </span><span>{{ message }}</span></div>
 <br>
 <div *ngIf="schedules && schedules.length">
   <h2>Schedules List</h2>
