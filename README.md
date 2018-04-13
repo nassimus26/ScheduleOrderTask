@@ -22,5 +22,5 @@ Delete Schedule : DELETE http://localhost:3000/api/schedules/:id
 Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate
 Get the server config : GET http://localhost:3000/api/schedules/config
 ```
-
-![Webapp screen shoot](http://oi65.tinypic.com/29e3rrn.jpg)
+# App Preview
+![Webapp screen shoot](http://oi66.tinypic.com/w0j9jq.jpg)
