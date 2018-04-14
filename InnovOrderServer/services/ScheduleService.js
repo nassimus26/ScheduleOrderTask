@@ -69,8 +69,9 @@ function getNextScheduleDate() {
 function fixDateByTimeStep(date){
     var mnt = new moment(date);
     var mintues = mnt.get('minute');
-    var mintuesFloor = Math.floor(mintues/scheduleConfig.timeStep)*scheduleConfig.timeStep;
-    if (mintuesFloor<mintues || mintues== new moment(new Date()).minutes())
+    var nbrStep = Math.floor(mintues/scheduleConfig.timeStep);
+    var mintuesFloor = nbrStep*scheduleConfig.timeStep;
+    if (mintuesFloor<mintues || (/* already passed date */ nbrStep==0 && mintues == new moment(new Date()).minutes()))
         mintuesFloor +=scheduleConfig.timeStep;
     mnt.minute(mintuesFloor);
     return mnt.toDate();
