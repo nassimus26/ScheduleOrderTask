@@ -22,17 +22,24 @@ describe('Schedule Tests', function() {
         expect(scheduleService.list().length).toBe(0);
     });
 
-    it('should fail to create schedule when start == end', function () {
+    it('should raise an Error when create schedule with start < now', function () {
+        var schedule = new Schedule('01/01/2010', timeStep*3, timeStep);
+        expect(function () {
+            scheduleService.create(schedule);
+        }).toThrow(new Error('Order schedule cannot happens in the past'));
+    });
+
+    it('should raise an Error when create schedule with start == end', function () {
         var schedule = new Schedule('01/01/2030', timeStep, timeStep);
         expect(function () {
             scheduleService.create(schedule)
         }).toThrow(new Error('Schedule end must superior than the Schedule start'));
     });
 
-    it('should fail to create schedule when start > end', function () {
+    it('should raise an Error when create schedule with start > end', function () {
         var schedule = new Schedule('01/01/2030', timeStep*3, timeStep);
         expect(function () {
-            scheduleService.create(schedule)
+            scheduleService.create(schedule);
         }).toThrow(new Error('Schedule end must superior than the Schedule start'));
     });
 
@@ -70,13 +77,15 @@ describe('Schedule Tests', function() {
     });
 
     it('should retreive next schedule when having previous schedule', function () {
-        var schedule1 = new Schedule(scheduleService.fixDateByTimeStep(new moment().add('2', 'day').toDate()), timeStep, timeStep*3);
+        var minimalStart = new moment(scheduleService.fixDateByTimeStep(new Date()));
+        var minimalStartMinutes = minimalStart.minutes()+minimalStart.hours()*60;
+        var schedule1 = new Schedule(minimalStart.format('DD/MM/YYYY'), minimalStartMinutes, minimalStartMinutes+timeStep*3);
 
         scheduleService.create(schedule1);
         var nextScheduleDate = scheduleService.getNextScheduleDate();
 
-        var expetedResult = scheduleService.addDelay(schedule1.endTime).toDate();
-        expect(nextScheduleDate.getTime()).toBe(expetedResult.getTime());
+        var expectedResult = scheduleService.addDelay(schedule1.endTime).toDate();
+        expect(nextScheduleDate.getTime()).toBe(expectedResult.getTime());
     });
 
 })
