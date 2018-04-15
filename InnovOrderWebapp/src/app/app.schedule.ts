@@ -80,7 +80,6 @@ export class AppSchedule {
       var lastPosssibleSchedule = this.possiblesSchedules[this.possiblesSchedules.length-1];
       var endOfLastPosssibleScheduleDate = moment(lastPosssibleSchedule['nextScheduleDate'], this.DateFormat);
       var scheduleDateStr = endOfLastPosssibleScheduleDate.format(this.DateFormat);
-      console.log(scheduleDateStr);
       this.updateNextScheduleDate(scheduleDateStr);
     }
   }

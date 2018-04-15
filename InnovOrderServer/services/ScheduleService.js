@@ -40,18 +40,19 @@ function sortSchedulesByDate(){
         return comparison;
     });
 }
-
+function dateToSchedule(date, duration){
+    var nowStart = minutesOfTheDay(date);
+    return new Schedule(date.format('DD/MM/YYYY'), nowStart, nowStart+duration);
+}
 function getNextScheduleDate(fromScheduleStartDate) {
     var now = new moment(fixDateByTimeStep(new Date()));
     now = removeDelay(now);
     now.add(-scheduleConfig.timeStep, 'minute');
-    var nowStart = minutesOfTheDay(now);
-    var fakeFirstSchedule = new Schedule(now.format('DD/MM/YYYY'), nowStart, nowStart+scheduleConfig.timeStep);
+    var fakeFirstSchedule = dateToSchedule(now, scheduleConfig.timeStep);
     var schedules_ = [fakeFirstSchedule,...schedules];
     for (i in schedules_) {
         var schedule = schedules_[i];
-        if (i<schedules_.length-1)
-            if (fromScheduleStartDate && addDelay(schedule.endTime).isSameOrBefore(fromScheduleStartDate))
+        if (fromScheduleStartDate && addDelay(schedule.endTime).isSameOrBefore(fromScheduleStartDate))
                 continue;
         var minimalStartDate = addDelay(schedule.endTime);
         var minimalStart = minutesOfTheDay(minimalStartDate);
@@ -68,6 +69,11 @@ function getNextScheduleDate(fromScheduleStartDate) {
                 maxOrderDuration : maxOrderDuration
             };
     }
+    if (fromScheduleStartDate>new Date())
+        return {
+        nextScheduleDate : moment(fixDateByTimeStep(fromScheduleStartDate.toDate())).format('DD/MM/YYYY HH:mm'),
+        maxOrderDuration : maxOrderDuration
+    };
 }
 function isPossibleSchedule(schedules_, moment_,start, end){
     var possibleSchedule = new Schedule(moment_.format('DD/MM/YYYY'), start, end);
