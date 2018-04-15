@@ -61,7 +61,7 @@ describe('Schedule Tests', function() {
         var minimalStartOfTheSecondSchedule = scheduleService.addDelay(schedule1.endTime);
 
         minimalStartOfTheSecondSchedule.add(-timeStep, 'minute');
-        var minimalStart = minimalStartOfTheSecondSchedule.minutes()+minimalStartOfTheSecondSchedule.hour()*60;
+        var minimalStart = scheduleService.minutesOfTheDay(minimalStartOfTheSecondSchedule);
         var schedule2 = new Schedule(minimalStartOfTheSecondSchedule.format('DD/MM/YYYY'),
                 minimalStart ,
                 minimalStart+timeStep);
@@ -78,7 +78,7 @@ describe('Schedule Tests', function() {
 
     it('should retreive next schedule when having previous schedule', function () {
         var minimalStart = new moment(scheduleService.fixDateByTimeStep(new Date()));
-        var minimalStartMinutes = minimalStart.minutes()+minimalStart.hours()*60;
+        var minimalStartMinutes = scheduleService.minutesOfTheDay(minimalStart);
         var schedule1 = new Schedule(minimalStart.format('DD/MM/YYYY'), minimalStartMinutes, minimalStartMinutes+timeStep*3);
 
         scheduleService.create(schedule1);
