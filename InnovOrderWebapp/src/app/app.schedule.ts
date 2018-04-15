@@ -124,6 +124,8 @@ export class AppSchedule {
     var timeStep = this.scheduleConfig.timeStep;
     for (var i=1; timeStep*i<=maxOrderDuration; i++)
       this.orderDurationItems.push(timeStep*i);
+    if (this.orderDuration>maxOrderDuration)
+      this.orderDuration = maxOrderDuration;
   }
 
   public loadSchedules(){
