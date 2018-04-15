@@ -69,11 +69,13 @@ function getNextScheduleDate(fromScheduleStartDate) {
                 maxOrderDuration : maxOrderDuration
             };
     }
-    if (fromScheduleStartDate>new Date())
+    if (fromScheduleStartDate>new Date()){
+        var nextSchedule = fromScheduleStartDate.add(scheduleConfig.timeStep, 'minute');
         return {
-        nextScheduleDate : moment(fixDateByTimeStep(fromScheduleStartDate.toDate())).format('DD/MM/YYYY HH:mm'),
-        maxOrderDuration : scheduleConfig.maxOrderDurationIninutes
-    };
+            nextScheduleDate : moment(fixDateByTimeStep(nextSchedule.toDate())).format('DD/MM/YYYY HH:mm'),
+            maxOrderDuration : scheduleConfig.maxOrderDurationIninutes
+        };
+    }
 }
 function isPossibleSchedule(schedules_, moment_,start, end){
     var possibleSchedule = new Schedule(moment_.format('DD/MM/YYYY'), start, end);
@@ -88,7 +90,7 @@ function fixDateByTimeStep(date){
     var mintues = mnt.get('minute');
     var nbrStep = Math.floor(mintues/scheduleConfig.timeStep);
     var mintuesFloor = nbrStep*scheduleConfig.timeStep;
-    if (mintuesFloor<mintues || (mnt.isSameOrAfter(new moment())))
+    if (mintuesFloor<mintues || (mnt.isSameOrBefore(new moment())))
         mintuesFloor +=scheduleConfig.timeStep;
     mnt.minute(mintuesFloor);
     return mnt.toDate();
