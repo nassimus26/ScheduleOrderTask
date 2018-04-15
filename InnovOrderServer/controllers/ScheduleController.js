@@ -39,8 +39,8 @@
  });
 
  /* Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate */
- router.get(baseUrl+'/nextScheduleDate', function(req, res, next) {
-     return res.json(scheduleService.getNextScheduleDate());
+ router.get(baseUrl+'/nextScheduleDate/:fromDate', function(req, res, next) {
+     return res.json(scheduleService.getNextScheduleDate(new moment(req.params.fromDate, 'DD/MM/YYYY HH:mm')));
  });
 
  /* Delete Schedule : DELETE http://localhost:3000/api/schedules/:id */

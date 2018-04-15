@@ -41,8 +41,8 @@ export class ScheduleService {
   }
 
   /** Next Schedule: find next schedule from the server */
-  nextScheduleDate (): Observable<{}> {
-    const url = `${this.schedulesUrl}/nextScheduleDate`;
+  nextScheduleDate (fromDate:string): Observable<{}> {
+    const url = `${this.schedulesUrl}/nextScheduleDate/${fromDate}`;
     return this.http.get(url, httpOptions);
   }
 }

@@ -24,6 +24,9 @@ export class AppSchedule {
   public schedules;
   public message: string;
   public colorStateNextSchedule='off';
+  private possiblesSchedules = [];
+  private indexOPossiblesSchedule = 0;
+  private DateFormat = 'DD/MM/YYYY HH:mm';
   constructor(private scheduleService: ScheduleService, private _ngZone: NgZone) {
     this.loadConfig().subscribe(
       data =>{
@@ -33,7 +36,7 @@ export class AppSchedule {
         },
       exp =>{this.message = exp.error;}
       );
-    this.updateNextScheduleDate();
+    this.updateNextScheduleDate(null);
   }
 
   onSchedule() {
@@ -45,11 +48,11 @@ export class AppSchedule {
     this.scheduleService.create(dayStr, start, end).subscribe(
       data =>{
             this.loadSchedules();
-            this.updateNextScheduleDate();
+            this.updateNextScheduleDate(null);
       },
       exp =>{
         this.message = exp.error;
-        this.updateNextScheduleDate();//case old schedule date
+        this.updateNextScheduleDate(null);//case old schedule date
       }
     );
   }
@@ -58,23 +61,55 @@ export class AppSchedule {
     this.scheduleService.delete(id).subscribe(
       data =>{
         this.loadSchedules();
-        this.updateNextScheduleDate();
+        this.updateNextScheduleDate(null);
       }
     );
   }
-  private updateNextScheduleDate():any {
+  moveToPreviousSchedule() {
+    if (this.indexOPossiblesSchedule>0) {
+        this.indexOPossiblesSchedule--;
+        this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule]);
+    }
+  }
+  moveToNextSchedule() {
+    this.clearMessage();
+    if (this.indexOPossiblesSchedule < this.possiblesSchedules.length-1){
+      this.indexOPossiblesSchedule++;
+      this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule]);
+    } else {
+      var lastPosssibleSchedule = this.possiblesSchedules[this.possiblesSchedules.length-1];
+      var endOfLastPosssibleScheduleDate = moment(lastPosssibleSchedule['nextScheduleDate'], this.DateFormat);
+      var scheduleDateStr = endOfLastPosssibleScheduleDate.format(this.DateFormat);
+      console.log(scheduleDateStr);
+      this.updateNextScheduleDate(scheduleDateStr);
+    }
+  }
 
-     this.scheduleService.nextScheduleDate().subscribe(
+  private clearPossibleSchedules(){
+    this.possiblesSchedules = [];
+    this.indexOPossiblesSchedule;
+  }
+  private updateNextScheduleDate(fromDate:string):any {
+     if (!fromDate){
+       this.clearPossibleSchedules();
+       fromDate = moment().format(this.DateFormat);
+     }
+     this.scheduleService.nextScheduleDate(window.encodeURIComponent(fromDate)).subscribe(
        data =>{
-           var newDate = moment(data['nextScheduleDate'], 'DD/MM/YYYY HH:mm').toDate();
-         this.fillOrderDurationItems(data['maxOrderDuration']);
-           if (!this.nextSchedule || this.nextSchedule.getTime() != newDate.getTime()) {
-             this.nextSchedule = newDate;
-             this.blickNextScheduleInput();
-           }
+          this.updateScheduleValues(data);
          },
        exp =>{this.message = exp.error;}
      );
+  }
+  private updateScheduleValues(data){
+    var newDate = moment(data['nextScheduleDate'], this.DateFormat).toDate();
+    this.fillOrderDurationItems(data['maxOrderDuration']);
+    if (!this.nextSchedule || this.nextSchedule.getTime() != newDate.getTime()) {
+      this.nextSchedule = newDate;
+      this.blickNextScheduleInput();
+      this.possiblesSchedules.push(data);
+      this.indexOPossiblesSchedule = this.possiblesSchedules.length-1;
+    }
   }
   private blickNextScheduleInput(){
     this.colorStateNextSchedule = 'on';

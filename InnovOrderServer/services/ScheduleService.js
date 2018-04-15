@@ -39,10 +39,9 @@ function sortSchedulesByDate(){
         }
         return comparison;
     });
-
 }
 
-function getNextScheduleDate() {
+function getNextScheduleDate(fromScheduleStartDate) {
     var now = new moment(fixDateByTimeStep(new Date()));
     now = removeDelay(now);
     now.add(-scheduleConfig.timeStep, 'minute');
@@ -51,6 +50,9 @@ function getNextScheduleDate() {
     var schedules_ = [fakeFirstSchedule,...schedules];
     for (i in schedules_) {
         var schedule = schedules_[i];
+        if (i<schedules_.length-1)
+            if (fromScheduleStartDate && addDelay(schedule.endTime).isSameOrBefore(fromScheduleStartDate))
+                continue;
         var minimalStartDate = addDelay(schedule.endTime);
         var minimalStart = minutesOfTheDay(minimalStartDate);
         var maxOrderDuration = 0;
@@ -80,7 +82,7 @@ function fixDateByTimeStep(date){
     var mintues = mnt.get('minute');
     var nbrStep = Math.floor(mintues/scheduleConfig.timeStep);
     var mintuesFloor = nbrStep*scheduleConfig.timeStep;
-    if (mintuesFloor<mintues || (mnt.isAfterOrSame(new moment())))
+    if (mintuesFloor<mintues || (mnt.isSameOrAfter(new moment())))
         mintuesFloor +=scheduleConfig.timeStep;
     mnt.minute(mintuesFloor);
     return mnt.toDate();
