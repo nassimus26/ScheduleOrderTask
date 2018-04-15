@@ -75,7 +75,7 @@ export class AppSchedule {
     this.clearMessage();
     if (this.indexOPossiblesSchedule < this.possiblesSchedules.length-1){
       this.indexOPossiblesSchedule++;
-      this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule]);
+      this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule], false);
     } else {
       var lastPosssibleSchedule = this.possiblesSchedules[this.possiblesSchedules.length-1];
       var endOfLastPosssibleScheduleDate = moment(lastPosssibleSchedule['nextScheduleDate'], this.DateFormat);
