@@ -1,4 +1,4 @@
-<div style="width: 800px; margin: 0 auto">
+<div style="width: 920px; margin: 0 auto">
 
   <br>
   <h2>InnovOrder : Schedule Order Task</h2>
@@ -12,14 +12,14 @@
   </div>
   <br>
 <form (ngSubmit)="onSchedule()">
-  <table>
+  <table style="table-layout: fixed">
     <tr>
-      <td style="width: 700px">
+      <td style="width: 770px">
         <label for="nextSchedule"  class="font-weight-bold">Next schedule:</label>
         <input id="nextSchedule" [@changeBodyColor]="colorStateNextSchedule"
                ([ngModel])="nextSchedule" value="{{nextSchedule | date: 'dd/MM/yyyy HH:mm'}}" readonly size="13">
 
-        <label for="orderDurationRadio" style="margin-left: 20px;"  class="font-weight-bold">Order Duration (Minutes):</label>
+        <label for="orderDurationRadio" style="margin-left: 10px;"  class="font-weight-bold">Order Duration (Minutes):</label>
         <mat-radio-group [(ngModel)]="orderDuration" id="orderDurationRadio" name="orderDurationRadio">
           <mat-radio-button *ngFor="let item of orderDurationItems" [value]="item">
             {{item}}
@@ -27,7 +27,13 @@
         </mat-radio-group>
       </td>
       <td>
-        <button type="submit" class="btn btn-primary pull-right" style="margin-left: 30px">Schedule</button>
+        <button type="submit" class="btn btn-primary pull-right" style="margin-left: 10px">Schedule</button>
+      </td>
+      <td>
+        <button type="button" (click)="moveToPreviousSchedule()" class="btn btn-secondary pull-right" style="margin-left: 5px"> Previous </button>
+      </td>
+      <td>
+        <button type="button" (click)="moveToNextSchedule()"  class="btn btn-secondary pull-right" style="margin-left: 5px" > Next </button>
       </td>
     </tr>
   </table>
