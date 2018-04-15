@@ -140,5 +140,5 @@ function getScheduleConfig(){
     return scheduleConfig;
 }
 
-module.exports = {list:list, create:create, remove:remove, clear:clear, getNextScheduleDate:getNextScheduleDate,
+module.exports = {list:list, create:create, remove:remove, clear:clear, getNextScheduleDate:getNextScheduleDate,minutesOfTheDay:minutesOfTheDay,
     fixDateByTimeStep:fixDateByTimeStep, addDelay:addDelay, removeDelay:removeDelay, getScheduleConfig:getScheduleConfig, globalDelay:globalDelay};
