@@ -43,35 +43,44 @@ function sortSchedulesByDate(){
 }
 
 function getNextScheduleDate() {
-    if (!schedules.length){
-        return fixDateByTimeStep(new Date());
-    } else {
-        var now = new moment(fixDateByTimeStep(new Date()));
-        var nowStart = now.minutes()+now.hour()*60;
-        var possibleSchedule = new Schedule(now.format('DD/MM/YYYY'), nowStart, nowStart+scheduleConfig.timeStep);
-        var overlaps = findOverlapItems(possibleSchedule);
-        if (!overlaps.length)
-            return now.toDate();
-        for (i in schedules) {
-            var schedule = schedules[i];
-            var minimalStartDate = addDelay(schedule.endTime);
-            var minimalStart = minimalStartDate.minutes()+minimalStartDate.hour()*60;
-            var possibleSchedule = new Schedule(minimalStartDate.format('DD/MM/YYYY'), minimalStart, minimalStart+scheduleConfig.timeStep);
-            var overlaps = findOverlapItems(possibleSchedule);
-            if (!overlaps.length){
-                return minimalStartDate.toDate();
-            }
+    var now = new moment(fixDateByTimeStep(new Date()));
+    now = removeDelay(now);
+    now.add(-scheduleConfig.timeStep, 'minute');
+    var nowStart = minutesOfTheDay(now);
+    var fakeFirstSchedule = new Schedule(now.format('DD/MM/YYYY'), nowStart, nowStart+scheduleConfig.timeStep);
+    var schedules_ = [fakeFirstSchedule,...schedules];
+    for (i in schedules_) {
+        var schedule = schedules_[i];
+        var minimalStartDate = addDelay(schedule.endTime);
+        var minimalStart = minutesOfTheDay(minimalStartDate);
+        var maxOrderDuration = 0;
+        while (maxOrderDuration<scheduleConfig.maxOrderDurationIninutes){
+            var newMaxDuration = maxOrderDuration+scheduleConfig.timeStep;
+            if (!isPossibleSchedule(schedules_, minimalStartDate, minimalStart, minimalStart+newMaxDuration))
+                break;
+            maxOrderDuration = newMaxDuration;
         }
-        return fixDateByTimeStep(new Date());
+        if (maxOrderDuration>0)
+            return {
+                nextScheduleDate : minimalStartDate.format('DD/MM/YYYY HH:mm'),
+                maxOrderDuration : maxOrderDuration
+            };
     }
 }
-
+function isPossibleSchedule(schedules_, moment_,start, end){
+    var possibleSchedule = new Schedule(moment_.format('DD/MM/YYYY'), start, end);
+    var overlaps = findOverlapItems(possibleSchedule, schedules_);
+    return (!overlaps.length);
+}
+function minutesOfTheDay(moment_){
+    return moment_.minutes()+moment_.hours()*60;
+}
 function fixDateByTimeStep(date){
     var mnt = new moment(date);
     var mintues = mnt.get('minute');
     var nbrStep = Math.floor(mintues/scheduleConfig.timeStep);
     var mintuesFloor = nbrStep*scheduleConfig.timeStep;
-    if (mintuesFloor<mintues || (/* already passed date */ nbrStep==0 && mintues == new moment(new Date()).minutes()))
+    if (mintuesFloor<mintues || (mnt.isAfterOrSame(new moment())))
         mintuesFloor +=scheduleConfig.timeStep;
     mnt.minute(mintuesFloor);
     return mnt.toDate();
@@ -99,9 +108,15 @@ function clear(){
 function addDelay(date) {
     return new moment(date.toDate()).add(globalDelay(), 'minute');
 }
+function removeDelay(date) {
+    return new moment(date.toDate()).add(-globalDelay(), 'minute');
+}
 
-function findOverlapItems(schedule){
-    return schedules.filter( function(item) {
+function findOverlapItems(schedule, schedules_){
+    var schedules__ = schedules;
+    if (schedules_)
+        schedules__ = schedules_;
+    return schedules__.filter( function(item) {
         return  (item.day == schedule.day && (
                 ( schedule.startTime.isBefore(addDelay(item.endTime))
                     && schedule.endTime.isAfter(item.startTime)) ||
@@ -118,4 +133,4 @@ function getScheduleConfig(){
 }
 
 module.exports = {list:list, create:create, remove:remove, clear:clear, getNextScheduleDate:getNextScheduleDate,
-    fixDateByTimeStep:fixDateByTimeStep, addDelay:addDelay, getScheduleConfig:getScheduleConfig, globalDelay:globalDelay};
+    fixDateByTimeStep:fixDateByTimeStep, addDelay:addDelay, removeDelay:removeDelay, getScheduleConfig:getScheduleConfig, globalDelay:globalDelay};
