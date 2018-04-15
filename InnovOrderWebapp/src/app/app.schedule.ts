@@ -3,6 +3,7 @@ import {ScheduleService} from './schedule.service';
 import {Observable} from "rxjs/Observable";
 import * as moment from "moment";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {encodeUriFragment, encodeUriQuery} from "@angular/router/src/url_tree";
 var animtionDelay = 215;
 @Component({
   selector: 'app-root',
@@ -93,7 +94,7 @@ export class AppSchedule {
        this.clearPossibleSchedules();
        fromDate = moment().format(this.DateFormat);
      }
-     this.scheduleService.nextScheduleDate(encodeURI(fromDate)).subscribe(
+     this.scheduleService.nextScheduleDate(encodeURIComponent(fromDate)).subscribe(
        data =>{
           this.updateScheduleValues(data, true);
          },
