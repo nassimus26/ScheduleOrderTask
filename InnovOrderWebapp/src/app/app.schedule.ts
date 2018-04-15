@@ -68,7 +68,7 @@ export class AppSchedule {
   moveToPreviousSchedule() {
     if (this.indexOPossiblesSchedule>0) {
         this.indexOPossiblesSchedule--;
-        this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule]);
+        this.updateScheduleValues(this.possiblesSchedules[this.indexOPossiblesSchedule], false);
     }
   }
   moveToNextSchedule() {
@@ -93,7 +93,7 @@ export class AppSchedule {
        this.clearPossibleSchedules();
        fromDate = moment().format(this.DateFormat);
      }
-     this.scheduleService.nextScheduleDate(window.encodeURIComponent(fromDate)).subscribe(
+     this.scheduleService.nextScheduleDate(encodeURI(fromDate)).subscribe(
        data =>{
           this.updateScheduleValues(data, true);
          },
