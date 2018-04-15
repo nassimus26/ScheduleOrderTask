@@ -72,7 +72,7 @@ function getNextScheduleDate(fromScheduleStartDate) {
     if (fromScheduleStartDate>new Date())
         return {
         nextScheduleDate : moment(fixDateByTimeStep(fromScheduleStartDate.toDate())).format('DD/MM/YYYY HH:mm'),
-        maxOrderDuration : maxOrderDuration
+        maxOrderDuration : scheduleConfig.maxOrderDurationIninutes
     };
 }
 function isPossibleSchedule(schedules_, moment_,start, end){
