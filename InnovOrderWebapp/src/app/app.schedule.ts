@@ -28,7 +28,7 @@ export class AppSchedule {
     this.loadConfig().subscribe(
       data =>{
           this.scheduleConfig = data;
-          this.fillOrderDurationItems();
+          this.orderDuration = this.scheduleConfig.timeStep;
           this.loadSchedules();
         },
       exp =>{this.message = exp.error;}
@@ -66,7 +66,8 @@ export class AppSchedule {
 
      this.scheduleService.nextScheduleDate().subscribe(
        data =>{
-           var newDate = moment(data, 'DD/MM/YYYY HH:mm').toDate();
+           var newDate = moment(data['nextScheduleDate'], 'DD/MM/YYYY HH:mm').toDate();
+         this.fillOrderDurationItems(data['maxOrderDuration']);
            if (!this.nextSchedule || this.nextSchedule.getTime() != newDate.getTime()) {
              this.nextSchedule = newDate;
              this.blickNextScheduleInput();
@@ -82,12 +83,11 @@ export class AppSchedule {
   public loadConfig(): Observable<{}>{
       return this.scheduleService.getConfig();
   }
-  public fillOrderDurationItems() {
+  public fillOrderDurationItems(maxOrderDuration) {
+    this.orderDurationItems = [];
     var timeStep = this.scheduleConfig.timeStep;
-    for (var i=1; i<=4; i++) {
+    for (var i=1; timeStep*i<=maxOrderDuration; i++)
       this.orderDurationItems.push(timeStep*i);
-    }
-    this.orderDuration = timeStep;
   }
 
   public loadSchedules(){

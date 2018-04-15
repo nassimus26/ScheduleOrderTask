@@ -85,7 +85,7 @@ describe('Schedule Tests', function() {
         var nextScheduleDate = scheduleService.getNextScheduleDate();
 
         var expectedResult = scheduleService.addDelay(schedule1.endTime).toDate();
-        expect(nextScheduleDate.getTime()).toBe(expectedResult.getTime());
+        expect(new moment(nextScheduleDate.nextScheduleDate, 'DD/MM/YYYY HH:mm').toDate().getTime()).toBe(expectedResult.getTime());
     });
 
 })

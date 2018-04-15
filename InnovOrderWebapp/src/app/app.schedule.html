@@ -12,16 +12,25 @@
   </div>
   <br>
 <form (ngSubmit)="onSchedule()">
-  <label for="nextSchedule"  class="font-weight-bold">Next schedule:</label>
-  <input id="nextSchedule" [@changeBodyColor]="colorStateNextSchedule" ([ngModel])="nextSchedule" value="{{nextSchedule | date: 'dd/MM/yyyy HH:mm'}}" readonly>
+  <table>
+    <tr>
+      <td style="width: 700px">
+        <label for="nextSchedule"  class="font-weight-bold">Next schedule:</label>
+        <input id="nextSchedule" [@changeBodyColor]="colorStateNextSchedule"
+               ([ngModel])="nextSchedule" value="{{nextSchedule | date: 'dd/MM/yyyy HH:mm'}}" readonly size="13">
 
-  <label for="orderDurationSelect" style="margin-left: 20px;"  class="font-weight-bold">Order Duration:</label>
-
-  <select id="orderDurationSelect" [(ngModel)]="orderDuration" name="orderDurationSelect" >
-    <option *ngFor="let item of orderDurationItems" [ngValue]="item">{{item}} minutes</option>
-  </select>
-
-  <button type="submit" class="btn btn-primary pull-right" >Schedule</button>
+        <label for="orderDurationRadio" style="margin-left: 20px;"  class="font-weight-bold">Order Duration (Minutes):</label>
+        <mat-radio-group [(ngModel)]="orderDuration" id="orderDurationRadio" name="orderDurationRadio">
+          <mat-radio-button *ngFor="let item of orderDurationItems" [value]="item">
+            {{item}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </td>
+      <td>
+        <button type="submit" class="btn btn-primary pull-right" style="margin-left: 30px">Schedule</button>
+      </td>
+    </tr>
+  </table>
 </form>
 
   <div class="alert-info" *ngIf="!!message"><span class="title" style="color: #a961ff">MSG : </span><span>{{ message }}</span></div>
