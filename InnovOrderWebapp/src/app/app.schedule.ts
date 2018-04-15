@@ -96,19 +96,21 @@ export class AppSchedule {
      }
      this.scheduleService.nextScheduleDate(window.encodeURIComponent(fromDate)).subscribe(
        data =>{
-          this.updateScheduleValues(data);
+          this.updateScheduleValues(data, true);
          },
        exp =>{this.message = exp.error;}
      );
   }
-  private updateScheduleValues(data){
+  private updateScheduleValues(data, pushData){
     var newDate = moment(data['nextScheduleDate'], this.DateFormat).toDate();
     this.fillOrderDurationItems(data['maxOrderDuration']);
     if (!this.nextSchedule || this.nextSchedule.getTime() != newDate.getTime()) {
       this.nextSchedule = newDate;
       this.blickNextScheduleInput();
-      this.possiblesSchedules.push(data);
-      this.indexOPossiblesSchedule = this.possiblesSchedules.length-1;
+      if (pushData){
+        this.possiblesSchedules.push(data);
+        this.indexOPossiblesSchedule = this.possiblesSchedules.length-1;
+      }
     }
   }
   private blickNextScheduleInput(){

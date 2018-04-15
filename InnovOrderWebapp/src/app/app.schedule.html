@@ -30,10 +30,10 @@
         <button type="submit" class="btn btn-primary pull-right" style="margin-left: 10px">Schedule</button>
       </td>
       <td>
-        <button type="button" (click)="moveToPreviousSchedule()" class="btn btn-secondary pull-right" style="margin-left: 5px"> Previous </button>
+        <button type="button" *ngIf="indexOPossiblesSchedule>0" (click)="moveToPreviousSchedule()" class="btn btn-success pull-right" style="margin-left: 5px"> Previous </button>
       </td>
       <td>
-        <button type="button" (click)="moveToNextSchedule()"  class="btn btn-secondary pull-right" style="margin-left: 5px" > Next </button>
+        <button type="button" (click)="moveToNextSchedule()"  class="btn btn-success pull-right" style="margin-left: 5px" > Next </button>
       </td>
     </tr>
   </table>
