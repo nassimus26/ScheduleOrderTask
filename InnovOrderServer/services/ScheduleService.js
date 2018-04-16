@@ -54,7 +54,7 @@ class ScheduleService {
         return new Schedule(date.format('DD/MM/YYYY'), nowStart, nowStart+duration);
     }
 
-    getNextScheduleDate(fromScheduleStartDate) {
+    getNextScheduleDate(afterScheduleStartDate) {
         /*
          @STEP 1
          * We add a fake schedule with endTime is now -scheduleConfig.timeStep
@@ -69,7 +69,7 @@ class ScheduleService {
         for (var i in schedules_) {
             var schedule = schedules_[i];
             // handle next schedule date behavior with fromScheduleStartDate argument
-            if (fromScheduleStartDate && this.addDelay(schedule.endTime).isSameOrBefore(fromScheduleStartDate))
+            if (afterScheduleStartDate && this.addDelay(schedule.endTime).isSameOrBefore(afterScheduleStartDate))
                 continue;
             var minimalStartDate = this.addDelay(schedule.endTime);
             var minimalStart = this.minutesOfTheDay(minimalStartDate);
@@ -84,8 +84,8 @@ class ScheduleService {
                 return new NextScheduleDateResponse(minimalStartDate, maxOrderDuration);
         }
         // we are now after all schedules let increment by scheduleConfig.timeStep
-        if (fromScheduleStartDate>new Date()) {
-            var nextSchedule = fromScheduleStartDate.add(scheduleConfig.timeStep, 'minute');
+        if (afterScheduleStartDate>new Date()) {
+            var nextSchedule = afterScheduleStartDate.add(scheduleConfig.timeStep, 'minute');
             return new NextScheduleDateResponse(moment(this.fixDateByTimeStep(nextSchedule.toDate())), scheduleConfig.maxOrderDurationIninutes);
         }
     }
