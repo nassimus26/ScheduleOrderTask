@@ -87,7 +87,7 @@ export class AppSchedule {
 
   private clearPossibleSchedules(){
     this.possiblesSchedules = [];
-    this.indexOPossiblesSchedule;
+    this.indexOPossiblesSchedule = 0;
   }
   private updateNextScheduleDate(fromDate:string):any {
      if (!fromDate){
@@ -108,10 +108,15 @@ export class AppSchedule {
       this.nextSchedule = newDate;
       this.blickNextScheduleInput();
       if (pushData){
-        this.possiblesSchedules.push(data);
-        this.indexOPossiblesSchedule = this.possiblesSchedules.length-1;
+        this.pushData(data);
       }
+    }else if (pushData && !this.possiblesSchedules.length){
+      this.pushData(data);
     }
+  }
+  private pushData(data){
+    this.possiblesSchedules.push(data);
+    this.indexOPossiblesSchedule = this.possiblesSchedules.length-1;
   }
   private blickNextScheduleInput(){
     this.colorStateNextSchedule = 'on';
