@@ -8,6 +8,8 @@
 require('../models/Schedule');
 var scheduleConfig = require('../config/ScheduleCfg');
 var Schedule = require('../models/Schedule');
+var NextScheduleDateResponse = require('../models/NextScheduleDateResponse');
+
 var moment = require('moment');
 var schedules = [];
 
@@ -45,11 +47,17 @@ function dateToSchedule(date, duration){
     return new Schedule(date.format('DD/MM/YYYY'), nowStart, nowStart+duration);
 }
 function getNextScheduleDate(fromScheduleStartDate) {
+    /*
+      @STEP 1
+     * We add a fake schedule with endTime is now -scheduleConfig.timeStep
+     * to offer a chance that the next schedule will be just after now
+     * */
     var now = new moment(fixDateByTimeStep(new Date()));
     now = removeDelay(now);
     now.add(-scheduleConfig.timeStep, 'minute');
     var fakeFirstSchedule = dateToSchedule(now, scheduleConfig.timeStep);
     var schedules_ = [fakeFirstSchedule,...schedules];
+    /********************* End of @STEP 1 ***********************/
     for (i in schedules_) {
         var schedule = schedules_[i];
         if (fromScheduleStartDate && addDelay(schedule.endTime).isSameOrBefore(fromScheduleStartDate))
@@ -64,17 +72,11 @@ function getNextScheduleDate(fromScheduleStartDate) {
             maxOrderDuration = newMaxDuration;
         }
         if (maxOrderDuration>0)
-            return {
-                nextScheduleDate : minimalStartDate.format('DD/MM/YYYY HH:mm'),
-                maxOrderDuration : maxOrderDuration
-            };
+            return new NextScheduleDateResponse(minimalStartDate, maxOrderDuration);
     }
     if (fromScheduleStartDate>new Date()){
         var nextSchedule = fromScheduleStartDate.add(scheduleConfig.timeStep, 'minute');
-        return {
-            nextScheduleDate : moment(fixDateByTimeStep(nextSchedule.toDate())).format('DD/MM/YYYY HH:mm'),
-            maxOrderDuration : scheduleConfig.maxOrderDurationIninutes
-        };
+        return new NextScheduleDateResponse(moment(fixDateByTimeStep(nextSchedule.toDate())), scheduleConfig.maxOrderDurationIninutes);
     }
 }
 function isPossibleSchedule(schedules_, moment_,start, end){
