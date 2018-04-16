@@ -19,6 +19,6 @@ Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github
 Listing Schedules : GET http://localhost:3000/api/schedules/list
 Create Schedule : POST http://localhost:3000/api/schedules/create
 Delete Schedule : DELETE http://localhost:3000/api/schedules/:id
-Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate
+Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate:fromScheduleStartDate
 Get the server config : GET http://localhost:3000/api/schedules/config
 ```
