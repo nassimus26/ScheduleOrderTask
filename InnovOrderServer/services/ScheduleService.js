@@ -39,13 +39,8 @@ class ScheduleService {
     }
     sortSchedulesByDate(){
         this.schedules.sort(function compare(a, b){
-            var comparison = 0;
-            if (a.startTime.toDate().getTime() > b.startTime.toDate().getTime()) {
-                comparison = 1;
-            } else if (b.startTime.toDate().getTime() > a.startTime.toDate().getTime()) {
-                comparison = -1;
-            }
-            return comparison;
+            var c = a.startTime.toDate().getTime() - b.startTime.toDate().getTime();
+            return c===0?0:c/Math.abs(c);
         });
     }
 
