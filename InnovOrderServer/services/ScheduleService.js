@@ -16,9 +16,9 @@ function list(){
 }
 
 function create(schedule) {
-    if (schedule.startTime.toDate().getTime() < new Date().getTime())
+    if (schedule.startTime.isBefore(new moment()))
         throw new Error('Order schedule cannot happens in the past');
-    if (schedule.startTime.toDate().getTime() >= schedule.endTime.toDate().getTime())
+    if (schedule.startTime.isSameOrAfter(schedule.endTime))
         throw new Error('Schedule end must superior than the Schedule start');
     if (schedule.start%scheduleConfig.timeStep!=0 || schedule.end%scheduleConfig.timeStep!=0)
         throw new Error('Schedule start or end must be multiple of '+scheduleConfig.timeStep);
