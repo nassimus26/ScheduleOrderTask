@@ -34,17 +34,17 @@
  });
 
  /* Get the server config : GET http://localhost:3000/api/schedules/config */
- router.get(baseUrl+'/config', function(req, res, next) {
+ router.get(`${baseUrl}/config`, function(req, res, next) {
     return res.json(scheduleService.getScheduleConfig());
  });
 
  /* Get the next schedule date : GET http://localhost:3000/api/schedules/nextScheduleDate:afterScheduleStartDate */
- router.get(baseUrl+'/nextScheduleDate/:afterScheduleStartDate', function(req, res, next) {
+ router.get(`${baseUrl}/nextScheduleDate/:afterScheduleStartDate`, function(req, res, next) {
      return res.json(scheduleService.getNextScheduleDate(new moment(req.params.afterScheduleStartDate, 'DD/MM/YYYY HH:mm')));
  });
 
  /* Delete Schedule : DELETE http://localhost:3000/api/schedules/:id */
- router.delete(baseUrl+'/:id', function(req, res, next) {
+ router.delete(`${baseUrl}/:id`, function(req, res, next) {
     try{
         scheduleService.remove( req.params.id );
     }catch (e) {
