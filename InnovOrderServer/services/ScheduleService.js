@@ -74,7 +74,7 @@ class ScheduleService {
             var minimalStartDate = this.addDelay(schedule.endTime);
             var minimalStart = this.minutesOfTheDay(minimalStartDate);
             var maxOrderDuration = 0;
-            while (maxOrderDuration<scheduleConfig.maxOrderDurationIninutes){
+            while (maxOrderDuration<scheduleConfig.maxOrderDurationInMinutes){
                 var newMaxDuration = maxOrderDuration+scheduleConfig.timeStep;
                 if (!this.isPossibleSchedule(schedules_, minimalStartDate, minimalStart, minimalStart+newMaxDuration))
                     break;
@@ -86,7 +86,7 @@ class ScheduleService {
         // we are now after all schedules let increment by scheduleConfig.timeStep
         if (afterScheduleStartDate>new Date()) {
             var nextSchedule = afterScheduleStartDate.add(scheduleConfig.timeStep, 'minute');
-            return new NextScheduleDateResponse(moment(this.fixDateByTimeStep(nextSchedule.toDate())), scheduleConfig.maxOrderDurationIninutes);
+            return new NextScheduleDateResponse(moment(this.fixDateByTimeStep(nextSchedule.toDate())), scheduleConfig.maxOrderDurationInMinutes);
         }
     }
 
