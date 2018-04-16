@@ -123,9 +123,7 @@ function removeDelay(date) {
 }
 
 function findOverlapItems(schedule, schedules_){
-    var schedules__ = schedules;
-    if (schedules_)
-        schedules__ = schedules_;
+    var schedules__ = schedules_?schedules_:schedules;
     return schedules__.filter( function(item) {
         return  (item.day == schedule.day && (
                 ( schedule.startTime.isBefore(addDelay(item.endTime))
