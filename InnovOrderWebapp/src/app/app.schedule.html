@@ -47,7 +47,7 @@
     <thead><tr><th>Day</th><th>Start (minutes)</th><th>End (minutes)</th><th>Start Time</th><th>End Time</th><th>ACTIONS</th></tr></thead>
     <tbody>
       <tr *ngFor="let result of schedules">
-        <td>{{result.day}}</td>
+        <td>{{result.startTime | date : 'EEE dd/MM/yyyy'}}</td>
         <td>{{result.start}}</td>
         <td>{{result.end}}</td>
         <td>{{result.startTime | date : 'dd/MM/yyyy HH:mm'}}</td>
